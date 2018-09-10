@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace SQLClient
@@ -25,13 +26,20 @@ namespace SQLClient
                                 Environment.Exit(0);
                                 break;
                             case "help":
-                                Help();
+                            case "h":
+                                Display.PrintHelp();
                                 break;
                             case "view":
                                 View(inputArray[1], connection);
                                 break;
                             case "cor":
                                 CreateOrReplace(inputArray[1], inputArray, connection);
+                                break;
+                            case "list":
+                                ListTables(connection);
+                                break;
+                            default:
+                                Display.PrintDefault();
                                 break;
                         }
                     } 
@@ -41,15 +49,6 @@ namespace SQLClient
                     Console.WriteLine(e);
                 }
             }
-        }
-
-        static void Help()
-        {
-            Console.WriteLine("Available commands:");
-            Console.WriteLine(" help");
-            Console.WriteLine(" view <table>");
-            Console.WriteLine(" cor <table> [param=value]");
-
         }
 
         static void View(string table, SqlConnection connection)
@@ -68,7 +67,7 @@ namespace SQLClient
             for (int i = 2; i < parameters.Length; i++)
             {
                 string[] param = parameters[i].Split('=');
-                if (param[1] == "NULL")
+                if ("NULL".Equals(param[1].ToUpper()))
                 {
                     cmd.Parameters.AddWithValue(param[0], DBNull.Value);
                 }
@@ -78,6 +77,18 @@ namespace SQLClient
                 }
             }
             cmd.ExecuteNonQuery();
+        }
+
+        static void ListTables(SqlConnection connection)
+        {
+            List<string> tables = new List<string>();
+            DataTable dt = connection.GetSchema("Tables");
+            foreach (DataRow row in dt.Rows)
+            {
+                string tablename = (string)row[2];
+                tables.Add(tablename);
+            }
+            Display.Print(tables);
         }
     }
 }

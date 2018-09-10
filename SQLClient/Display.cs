@@ -10,10 +10,42 @@ namespace SQLClient
         static readonly int consoleHeight = Console.WindowHeight;
         static readonly int consoleWidth = Console.WindowWidth;
 
+        public static void PrintHelp()
+        {
+            Console.WriteLine("Available commands:");
+
+            PrintHorizontalLine('─');
+
+            Console.WriteLine(" help | h");
+            Console.WriteLine("     lists all available commands");
+
+            PrintHorizontalLine('-');
+
+            Console.WriteLine(" view <table>");
+            Console.WriteLine("     prints out the content of the table");
+
+            PrintHorizontalLine('-');
+
+            Console.WriteLine(" cor <table> [param=value]");
+            Console.WriteLine("     @Id is specified:     values will be updated");
+            Console.WriteLine("     @Id is not specified: new entry will be created");
+
+            PrintHorizontalLine('-');
+
+            Console.WriteLine(" exit | q");
+            Console.WriteLine("     exit the application");
+
+            PrintHorizontalLine('─');
+        }
+
+        public static void PrintDefault()
+        {
+            Console.WriteLine("Unknown command. Type 'help' for a list of commands");
+        }
 
         public static void Print(DataTable table)
         {
-            PrintHorizontalLine("full");
+            PrintHorizontalLine('─');
 
             List<string> columnNames = new List<string>();
             foreach (DataColumn column in table.Columns)
@@ -22,7 +54,7 @@ namespace SQLClient
             }
             PrintRow(columnNames);
 
-            PrintHorizontalLine("dotted");
+            PrintHorizontalLine('-');
 
             foreach (DataRow row in table.Rows)
             {
@@ -33,7 +65,17 @@ namespace SQLClient
                 }
                 PrintRow(rowValues);
             }
-            PrintHorizontalLine("full");
+            PrintHorizontalLine('─');
+        }
+
+        public static void Print(List<String> list)
+        {
+            PrintHorizontalLine('─');
+            foreach (string item in list)
+            {
+                Console.WriteLine(item);
+            }
+            PrintHorizontalLine('─');
         }
 
         private static void PrintRow(List<string> items)
@@ -45,20 +87,6 @@ namespace SQLClient
                 row += PaddStringLeft(column, columnWidth);
             }
             Console.WriteLine(row);
-        }
-
-        private static string PaddStringCenter(string text, int width)
-        {
-            text = text.Length > width ? text.Substring(0, width - 3) + "..." : text;
-
-            if (string.IsNullOrEmpty(text))
-            {
-                return new string(' ', width);
-            }
-            else
-            {
-                return text.PadRight(width - (width - text.Length) / 2).PadLeft(width);
-            }
         }
 
         private static string PaddStringLeft(string text, int width)
@@ -75,25 +103,9 @@ namespace SQLClient
             }
         }
 
-        private static void PrintHorizontalLine(string type)
+        private static void PrintHorizontalLine(char type)
         {
-            char line;
-            switch (type)
-            {
-                case "full":
-                    line = '─';
-                    break;
-                case "hyphen":
-                    line = '-';
-                    break;
-                case "dotted":
-                    line = '.';
-                    break;
-                default:
-                    line = ' ';
-                    break;
-            }
-            Console.WriteLine(new String(line, consoleWidth));
+            Console.WriteLine(new String(type, consoleWidth));
         }
     }
 }
