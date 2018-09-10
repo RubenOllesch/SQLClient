@@ -7,13 +7,13 @@ namespace SQLClient
 {
     class Display
     {
-        static int consoleHeight = Console.WindowHeight;
-        static int consoleWidth = Console.WindowWidth;
+        static readonly int consoleHeight = Console.WindowHeight;
+        static readonly int consoleWidth = Console.WindowWidth;
 
 
         public static void Print(DataTable table)
         {
-            PrintHorizontalLine(true);
+            PrintHorizontalLine("full");
 
             List<string> columnNames = new List<string>();
             foreach (DataColumn column in table.Columns)
@@ -22,7 +22,7 @@ namespace SQLClient
             }
             PrintRow(columnNames);
 
-            PrintHorizontalLine(false);
+            PrintHorizontalLine("dotted");
 
             foreach (DataRow row in table.Rows)
             {
@@ -33,7 +33,7 @@ namespace SQLClient
                 }
                 PrintRow(rowValues);
             }
-            PrintHorizontalLine(true);
+            PrintHorizontalLine("full");
         }
 
         private static void PrintRow(List<string> items)
@@ -75,9 +75,24 @@ namespace SQLClient
             }
         }
 
-        private static void PrintHorizontalLine(bool full)
+        private static void PrintHorizontalLine(string type)
         {
-            char line = full ? '─' : '-';
+            char line;
+            switch (type)
+            {
+                case "full":
+                    line = '─';
+                    break;
+                case "hyphen":
+                    line = '-';
+                    break;
+                case "dotted":
+                    line = '.';
+                    break;
+                default:
+                    line = ' ';
+                    break;
+            }
             Console.WriteLine(new String(line, consoleWidth));
         }
     }
