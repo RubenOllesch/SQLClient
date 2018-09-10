@@ -15,23 +15,27 @@ namespace SQLClient
             consoleWidth = Console.WindowWidth;
         }
 
-        public void Table(SqlDataReader reader)
+        public void Print(DataTable table)
         {
-            DataTable table = reader.GetSchemaTable();
-            int tableWidth = table.MinimumCapacity;
-            for (int i = 0; i < 5; i++)
+            List<string> columnNames = new List<string>();
+            foreach (DataColumn column in table.Columns)
             {
-                List<string> columnNames = new List<string>();
-                for (int j = 0; j < tableWidth; j++)
+                columnNames.Add(column.ColumnName);
+            }
+            PrintRow(columnNames);
+
+            foreach (DataRow row in table.Rows)
+            {
+                List<string> rowValues = new List<string>();
+                foreach (object item in row.ItemArray)
                 {
-                    columnNames.Add(table.Select()[j].ItemArray[i].ToString());
+                    rowValues.Add(item.ToString());
                 }
-                Console.WriteLine(BuildRow(columnNames));
-                //Console.WriteLine(HorizontalLine());
+                PrintRow(rowValues);
             }
         }
 
-        private string BuildRow(List<string> items)
+        private void PrintRow(List<string> items)
         {
             int width = (consoleWidth - 1 - items.Count) / items.Count;
             string row = "|";
@@ -39,7 +43,7 @@ namespace SQLClient
             {
                 row += PaddString(column, width) + "|";
             }
-            return row; 
+            Console.WriteLine(row);
         }
 
         private string PaddString(string text, int width)

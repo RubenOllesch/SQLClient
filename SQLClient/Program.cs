@@ -15,10 +15,13 @@ namespace SQLClient
                 {
                     connection.Open();
                     SqlCommand cmd = new SqlCommand("SELECT * FROM viEmployee", connection);
-                    SqlDataReader reader = cmd.ExecuteReader();
 
                     Display display = new Display();
-                    display.Table(reader);
+                    DataTable table = new DataTable();
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(table);
+                    display.Print(table);
                 }
                 catch (Exception e)
                 {
