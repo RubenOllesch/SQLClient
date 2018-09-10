@@ -27,12 +27,11 @@ namespace SQLClient
                             case "view":
                                 SqlCommand cmd = new SqlCommand($"SELECT * FROM vi{inputArray[1]}", connection);
 
-                                Display display = new Display();
                                 DataTable table = new DataTable();
 
                                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                                 da.Fill(table);
-                                display.Print(table);
+                                Display.Print(table);
                                 break;
                         }
                     } 

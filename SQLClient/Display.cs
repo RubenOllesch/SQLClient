@@ -7,16 +7,14 @@ namespace SQLClient
 {
     class Display
     {
-        int consoleHeight;
-        int consoleWidth;
-        public Display()
-        {
-            consoleHeight = Console.WindowHeight;
-            consoleWidth = Console.WindowWidth;
-        }
+        static int consoleHeight = Console.WindowHeight;
+        static int consoleWidth = Console.WindowWidth;
 
-        public void Print(DataTable table)
+
+        public static void Print(DataTable table)
         {
+            PrintHorizontalLine(true);
+
             List<string> columnNames = new List<string>();
             foreach (DataColumn column in table.Columns)
             {
@@ -24,7 +22,7 @@ namespace SQLClient
             }
             PrintRow(columnNames);
 
-            PrintHorizontalLine();
+            PrintHorizontalLine(false);
 
             foreach (DataRow row in table.Rows)
             {
@@ -35,9 +33,10 @@ namespace SQLClient
                 }
                 PrintRow(rowValues);
             }
+            PrintHorizontalLine(true);
         }
 
-        private void PrintRow(List<string> items)
+        private static void PrintRow(List<string> items)
         {
             int columnWidth = consoleWidth / items.Count;
             string row = "";
@@ -48,7 +47,7 @@ namespace SQLClient
             Console.WriteLine(row);
         }
 
-        private string PaddStringCenter(string text, int width)
+        private static string PaddStringCenter(string text, int width)
         {
             text = text.Length > width ? text.Substring(0, width - 3) + "..." : text;
 
@@ -62,7 +61,7 @@ namespace SQLClient
             }
         }
 
-        private string PaddStringLeft(string text, int width)
+        private static string PaddStringLeft(string text, int width)
         {
             text = text.Length > width ? text.Substring(0, width - 3) + "..." : text;
 
@@ -76,9 +75,10 @@ namespace SQLClient
             }
         }
 
-        private void PrintHorizontalLine()
+        private static void PrintHorizontalLine(bool full)
         {
-            Console.WriteLine(new String('─', consoleWidth));
+            char line = full ? '─' : '-';
+            Console.WriteLine(new String(line, consoleWidth));
         }
     }
 }
