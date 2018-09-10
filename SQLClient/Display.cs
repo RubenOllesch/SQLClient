@@ -24,6 +24,8 @@ namespace SQLClient
             }
             PrintRow(columnNames);
 
+            PrintHorizontalLine();
+
             foreach (DataRow row in table.Rows)
             {
                 List<string> rowValues = new List<string>();
@@ -37,16 +39,16 @@ namespace SQLClient
 
         private void PrintRow(List<string> items)
         {
-            int width = (consoleWidth - 1 - items.Count) / items.Count;
-            string row = "|";
+            int columnWidth = consoleWidth / items.Count;
+            string row = "";
             foreach (string column in items)
             {
-                row += PaddString(column, width) + "|";
+                row += PaddStringLeft(column, columnWidth);
             }
             Console.WriteLine(row);
         }
 
-        private string PaddString(string text, int width)
+        private string PaddStringCenter(string text, int width)
         {
             text = text.Length > width ? text.Substring(0, width - 3) + "..." : text;
 
@@ -60,14 +62,28 @@ namespace SQLClient
             }
         }
 
-        private string HorizontalLine()
+        private string PaddStringLeft(string text, int width)
+        {
+            text = text.Length > width ? text.Substring(0, width - 3) + "..." : text;
+
+            if (string.IsNullOrEmpty(text))
+            {
+                return new string(' ', width);
+            }
+            else
+            {
+                return text.PadRight(width);
+            }
+        }
+
+        private void PrintHorizontalLine()
         {
             string line = "";
             for (int i = 0; i < consoleWidth; i++)
             {
                 line += "─";
             }
-            return line;
+            Console.WriteLine(line);
         }
     }
 }
