@@ -78,12 +78,7 @@ namespace SQLClient
 
         private void PrintHorizontalLine()
         {
-            string line = "";
-            for (int i = 0; i < consoleWidth; i++)
-            {
-                line += "─";
-            }
-            Console.WriteLine(line);
+            Console.WriteLine(new String('─', consoleWidth));
         }
     }
 }

@@ -14,14 +14,28 @@ namespace SQLClient
                 try
                 {
                     connection.Open();
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM viEmployee", connection);
+                    while (true)
+                    {
+                        string input = Console.ReadLine();
+                        string[] inputArray = input.Split(' ');
+                        switch (inputArray[0])
+                        {
+                            case "exit":
+                            case "q":
+                                Environment.Exit(0);
+                                break;
+                            case "view":
+                                SqlCommand cmd = new SqlCommand($"SELECT * FROM vi{inputArray[1]}", connection);
 
-                    Display display = new Display();
-                    DataTable table = new DataTable();
+                                Display display = new Display();
+                                DataTable table = new DataTable();
 
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(table);
-                    display.Print(table);
+                                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                                da.Fill(table);
+                                display.Print(table);
+                                break;
+                        }
+                    } 
                 }
                 catch (Exception e)
                 {
